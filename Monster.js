@@ -3,25 +3,30 @@ class Monster {
     this.pos = createVector(x, y);
     this.vel = createVector(0, 2);
     this.collided = false;
+
+    // MB : in general, ennemies have a bounding circle or/and a bounding box
+    // Bounding circle radius
+    this.r = 16;
+    // bounding box size
+    this.width = 20;
+    this.height = 8;
+
+    this.color = "black";
   }
 
   checkObstacleCollision(targetGroup) {
-    // target is an array of obstacle
+    // target is an array of obstacles
     targetGroup.forEach((target,index) => {
-      if (
-        this.pos.y + this.r >= target.y &&
-        this.pos.x + this.r >= target.x &&
-        this.pos.x <= target.x + target.width
-      ) {
+      if(rectsOverlap(this.pos.x, this.pos.y, this.r, this.r, 
+        target.x, target.y, target.width, target.height)) {
         this.collided = true;
       }
-      if (this.pos.y > canvaHeight || this.collided) {
+      if (this.collided) {
         if(this.constructor.name == "MonsterFall"){
           monstersFall.splice(index, 1);
         }else{
           monstersTrack.splice(index, 1);
-        }
-        
+        } 
       }
     });
   }
@@ -41,6 +46,7 @@ class Monster {
 class MonsterFall extends Monster{
   constructor(x,y){
     super(x,y);
+    this.color = '#A251FA'; // purple color
   }
   update() {
     this.pos.add(this.vel);
@@ -53,7 +59,7 @@ class MonsterFall extends Monster{
     // épaisseur du trait = 2
     strokeWeight(2);
     // formes pleines
-    fill('#A251FA'); // purple color
+    fill(this.color); 
     // sauvegarde du contexte graphique (couleur pleine, fil de fer, épaisseur du trait, 
     // position et rotation du repère de référence)
     push();
@@ -62,7 +68,7 @@ class MonsterFall extends Monster{
     // et on le tourne. heading() renvoie l'angle du vecteur vitesse (c'est l'angle du véhicule)
     rotate(this.vel.heading());
 
-    rect(0, 0, 20, 8);
+    rect(0, 0, this.width, this.height);
     // Que fait cette ligne ?
     pop();
   }
@@ -75,6 +81,7 @@ class MonsterTrack extends Monster{
     this.maxSpeed = 2;
     this.maxForce = 0.25;
     this.r = 16;
+    this.color = "red";
   }
   
   applyForce(force) {
@@ -103,7 +110,7 @@ class MonsterTrack extends Monster{
     strokeWeight(2);
 
     // formes pleines
-    fill(255, 0, 0); // Red color
+    fill(this.color); // Red color
 
     // sauvegarde du contexte graphique (couleur pleine, fil de fer, épaisseur du trait, 
     // position et rotation du repère de référence)
