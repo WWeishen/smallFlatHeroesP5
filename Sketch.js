@@ -12,12 +12,12 @@ const data=[
     },
     {monsters: [0,25],
     obstacles:[[canvaWidth - 400, 300, 400, 20],[0, 500, 400, 20]]
-    },
+    }
+    ,
     {monsters: [25,0],
     obstacles:[[0,250,100,20],[canvaWidth-150,250,150,20]]
     }
 ]
-
 
 getnbPlayer();
 function getnbPlayer() {
@@ -30,6 +30,12 @@ function getnbPlayer() {
 }
 
 function setup(){
+    backgroundMusic = createAudio('assets/backgroundMusic.mp3',playMusic);
+    let playButton = createButton('Play Music');
+    playButton.mousePressed(startMusic);
+    let stopButton = createButton('Stop Music');
+    stopButton.mousePressed(stopMusic);
+
     createCanvas(canvaWidth, canvaHeight);
     //canvas creation 
     currentLvl = 1;
@@ -52,6 +58,7 @@ function draw() {
     background(100,100,100);
     if(data[currentLvl-1]){
         //loop
+        if (data[currentLvl - 1].monsters && data[currentLvl - 1].obstacles) {
         //player instructions 
         playerList.forEach(player => {
             player.update();
@@ -77,13 +84,15 @@ function draw() {
             monsterDraw(monster);
             monster.update(target);
         });
-        
+
+
         if(monstersTrack.length === 0 && monstersFall.length ===0){
             currentLvl += 1;
             createMonster(currentLvl);
             createObstacle(currentLvl);
+            
         }
-    
+        }
     }else{
         displayPlayerWinWindow();
     }
@@ -169,6 +178,7 @@ function monsterDraw(monster){
         playerList.forEach(player => {
             if(millis() - player.lastCollisionTime > invincibleDuration){
                 if(monster.checkPlayerCollision(player)){
+                    let soundEffect = new Audio('assets/playerHurt.wav');soundEffect.play();
                     player.lives--;
                     console.log(player.lives);
                     player.lastCollisionTime = millis();
@@ -186,6 +196,8 @@ function monsterDraw(monster){
 }
 
 function createMonster(level){
+    console.log(data); // Vérifiez la valeur de 'data'
+    console.log(data[currentLvl-1]);
     let monsterFallNumber = data[level-1].monsters[0];
     let monsterX = canvaWidth /(2*monsterFallNumber);
     for(let i = 0 ; i < monsterFallNumber ; i++) {
@@ -207,4 +219,17 @@ function createObstacle(currentLvl){
         let obstacle = new Obstacle(e[0],e[1],e[2],e[3]);
         obstacles.push(obstacle);
     });
+}
+
+function startMusic() {
+    //backgroundMusic.autoplay(true);
+    backgroundMusic.play();
+}
+
+function stopMusic(){
+    backgroundMusic.pause();
+}
+
+function playMusic(){
+    backgroundMusic.loop();
 }

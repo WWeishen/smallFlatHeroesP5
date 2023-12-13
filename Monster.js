@@ -3,7 +3,6 @@ class Monster {
     this.pos = createVector(x, y);
     this.vel = createVector(0, 2);
     this.collided = false;
-
     // MB : in general, ennemies have a bounding circle or/and a bounding box
     // Bounding circle radius
     this.r = 16;
@@ -69,7 +68,6 @@ class MonsterFall extends Monster{
     rotate(this.vel.heading());
 
     rect(0, 0, this.width, this.height);
-    // Que fait cette ligne ?
     pop();
   }
 }
