@@ -18,15 +18,19 @@ class Player {
     update() {
         if (!this.grounded) {
             this.applyForce(this.gravity); // Apply gravity
-        } else {
-            this.vel.y = 0; // Set velocity to zero when grounded
-            this.acc.y = 0; // Set acceleration to zero when grounded
-        }
+        } 
         
         this.pos.add(this.vel);
         this.vel.add(this.acc);
-        this.acc.mult(0); // Reset acc
+        this.acc.mult(0);
         
+        if (this.pos.y >= height - this.size) {
+            this.pos.y = height - this.size;
+            this.grounded = true;
+        } else {
+            this.grounded = false;
+        }
+
         // Keep the player within the canva bounds
         this.pos.x = constrain(this.pos.x, 0, canvaWidth - this.size);
         

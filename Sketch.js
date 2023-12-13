@@ -43,7 +43,6 @@ function setup(){
     }
 
     createMonster(1);
-
     createObstacle(1);
     
 }
@@ -51,38 +50,44 @@ function setup(){
 
 function draw() {
     background(100,100,100);
-    //loop
-    //player instructions 
-    playerList.forEach(player => {
-        player.update();
-        player.draw();
-        player.grounded = false;
-    });
-    //obstacle intructions 
-    obstacles.forEach(obstacle => {
-        obstacle.draw();
+    if(data[currentLvl-1]){
+        //loop
+        //player instructions 
         playerList.forEach(player => {
-            player.checkObstacleCollision(obstacle);
+            player.update();
+            player.draw();
+            player.grounded = false;
         });
-    })
-    //monsters instructions
-    monstersFall.forEach(monster => {
-        monsterDraw(monster);
-        monster.update();
-    });
+        //obstacle intructions 
+        obstacles.forEach(obstacle => {
+            obstacle.draw();
+            playerList.forEach(player => {
+                player.checkObstacleCollision(obstacle);
+            });
+        })
+        //monsters instructions
+        monstersFall.forEach(monster => {
+            monsterDraw(monster);
+            monster.update();
+        });
 
-    monstersTrack.forEach(monster => {
-        let target = playernearest(monster).pos;
-        monster.applyBehaviors(target); 
-        monsterDraw(monster);
-        monster.update(target);
-    });
+        monstersTrack.forEach(monster => {
+            let target = playernearest(monster).pos;
+            monster.applyBehaviors(target); 
+            monsterDraw(monster);
+            monster.update(target);
+        });
+        
+        if(monstersTrack.length === 0 && monstersFall.length ===0){
+            currentLvl += 1;
+            createMonster(currentLvl);
+            createObstacle(currentLvl);
+        }
     
-    if(monstersTrack.length === 0 && monstersFall.length ===0){
-        currentLvl += 1;
-        createMonster(currentLvl);
-        createObstacle(currentLvl);
+    }else{
+        displayPlayerWinWindow();
     }
+    
 }
 
 function keyPressed() {
@@ -122,6 +127,21 @@ function displayGameOverWindow() {
     textAlign(CENTER, CENTER);
     text("Game Over", width / 2, height / 2);
 }  
+
+function displayPlayerWinWindow(){
+    fill(255);
+    textSize(50);
+    textAlign(CENTER, CENTER);
+    let str="";
+    playerList.forEach(element => {
+        if(indexOf(element) == 0){
+            str += "player1, "
+        }
+        else{str += "player2, "}
+    });
+    str +="you win";
+    text(str, width / 2, height / 2);
+}
 
 function checkPlayerList(){
     console.log(playerList.length);
