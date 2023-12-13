@@ -58,11 +58,10 @@ class Player {
         this.vel.x = 0;
     }
     checkObstacleCollision(obstacle){
-        if (this.pos.x + this.size >= obstacle.x && this.pos.x <= obstacle.x + obstacle.width) {
-            if (this.pos.y + this.size >= obstacle.y && this.pos.y <= obstacle.y + obstacle.height) {
-              this.pos.y = obstacle.y - this.size;
-              this.grounded = true;
-            } 
-          }
+        if(rectsOverlap(this.pos.x,this.pos.y,this.size,this.size,
+            obstacle.x,obstacle.y,obstacle.width,obstacle.height)){
+                this.pos.y = obstacle.y - obstacle.height-this.size;
+                this.grounded = true;
+        }
     }
 }
