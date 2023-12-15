@@ -1,13 +1,14 @@
 class Player {
     constructor(x, y,color) {
         this.pos = createVector(x, y);
+        this.size = 30;
         this.vel = createVector();
         this.acc = createVector();
-        this.size = 30;
         this.gravity = createVector(0, 0.5);
         this.grounded = false;
-        this.color = color;
+        this.jumping = false;
         this.lives = 3;
+        this.color = color;
         this.lastCollisionTime =0;
     }
 
@@ -16,24 +17,17 @@ class Player {
     }
 
     update() {
-        if (!this.grounded) {
-            this.applyForce(this.gravity); // Apply gravity
-        } 
+        // if (!this.grounded) {
+        //     this.applyForce(this.gravity); // Apply gravity
+        // }
+            this.applyForce(this.gravity);
+            this.vel.add(this.acc);
+            this.pos.add(this.vel);
+            this.acc.set(0, 0);
         
-        this.pos.add(this.vel);
-        this.vel.add(this.acc);
-        this.acc.mult(0);
-        
-        if (this.pos.y >= height - this.size) {
-            this.pos.y = height - this.size;
-            this.grounded = true;
-        } else {
-            this.grounded = false;
-        }
-
         // Keep the player within the canva bounds
         this.pos.x = constrain(this.pos.x, 0, canvaWidth - this.size);
-        
+        this.pos.y = constrain(this.pos.y, 0, canvaHeight - this.size);
     }
 
     draw() {
@@ -41,17 +35,21 @@ class Player {
         rect(this.pos.x, this.pos.y, this.size, this.size);
     }
 
+    jump(){
+        this.vel.y = -8;
+        this.grounded = false;
+        this.jumping = true;
+    }
 
     move(direction) {
-        let force = createVector(0, 0);
+        const speed = 3; // Adjust the movement speed as needed
         if (direction === 'right') {
-          force.x = 3;
+            this.applyForce(createVector(speed, 0));
         } else if (direction === 'left') {
-          force.x = -3;
-        } else if (this.grounded == true && direction === 'up') {
-            force.y = -3;
+            this.applyForce(createVector(-speed, 0));
+        } else if (direction === 'up') {
+            this.jump();
         }
-        this.applyForce(force);
     }
 
     stop() {
@@ -60,8 +58,13 @@ class Player {
     checkObstacleCollision(obstacle){
         if(rectsOverlap(this.pos.x,this.pos.y,this.size,this.size,
             obstacle.x,obstacle.y,obstacle.width,obstacle.height)){
-                this.pos.y = obstacle.y - obstacle.height-this.size;
+                this.pos.y = obstacle.y -this.size;
                 this.grounded = true;
+                this.jumping = false;
+                this.vel.y = 0;
         }
+        else{
+            this.grounded = false;
+        } 
     }
 }

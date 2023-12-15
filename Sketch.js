@@ -119,7 +119,7 @@ function keyReleased() {
     if (keyCode === 68|| keyCode === 81|| keyCode === 90) {
       player2.stop();
     }
-  }
+}
 
 
 
