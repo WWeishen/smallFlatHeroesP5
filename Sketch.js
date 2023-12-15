@@ -39,7 +39,6 @@ function setup(){
     stopButton.mousePressed(stopMusic);
 
     createCanvas(canvaWidth, canvaHeight);
-    //canvas creation 
     currentLvl = 1;
 
     //player initialisation
@@ -49,6 +48,7 @@ function setup(){
         player2 = new Player(100,100,'pink');
         playerList.push(player2);
     }
+    
     createMonster(1);
     createObstacle(1);
 }
@@ -56,20 +56,18 @@ function setup(){
 
 function draw() {
     background(100,100,100);
-    //player instructions 
+    displayLevelWindow();
     playerList.forEach(player => {
         player.update();
         player.draw();
         player.grounded = false;
     });
-    //obstacle intructions 
     obstacles.forEach(obstacle => {
         obstacle.draw();
         playerList.forEach(player => {
             player.checkObstacleCollision(obstacle);
         });
     })
-    //monsters instructions
     monstersFall.forEach(monster => {
         monsterDraw(monster);
         monster.update();
@@ -81,8 +79,9 @@ function draw() {
         monsterDraw(monster);
         monster.update(target);
     });
+
     deletMonster();
-    
+
     if(monstersTrack.length === 0 && monstersFall.length ===0){
         currentLvl += 1;
         if(data[currentLvl-1]){
@@ -99,7 +98,7 @@ function keyPressed() {
         player1.move('right');
     } else if (keyCode === LEFT_ARROW) {
         player1.move('left');
-    } else if (keyCode === UP_ARROW){//up
+    } else if (keyCode === UP_ARROW){
         player1.move('up');
     }
 
@@ -123,20 +122,25 @@ function keyReleased() {
     }
 }
 
-
-
 function displayGameOverWindow() {
     fill(255);
     textSize(50);
     textAlign(CENTER, CENTER);
     text("Game Over", width / 2, height / 2);
-}  
+}
 
 function displayPlayerWinWindow(){
     fill(255);
     textSize(50);
     textAlign(CENTER, CENTER);
     text("You win", width / 2, height / 2);
+}
+
+function displayLevelWindow(){
+    fill(255);
+    textSize(20);
+    textAlign(LEFT, TOP);
+    text("Level : " + currentLvl, 20, 20);
 }
 
 function checkPlayerList(){
@@ -182,11 +186,15 @@ function monsterDraw(monster){
         });
 }
 
+function deletMonster(){
+    monstersFall = monstersFall.filter(monster => monster.collided === false);
+    monstersTrack = monstersTrack.filter(monster => monster.collided === false);
+}
+
 function createMonster(level){
     console.log(data);
     console.log(data[currentLvl-1]);
     data[level-1].monsters[0].forEach(element => {
-        console.log(element+"**")
         let monsterFallNumber = element[0];
         let sens = element[1];
         if(sens){//this.width = 20;this.height = 8;
@@ -213,18 +221,13 @@ function createMonster(level){
                     }
                     break; 
                 default://"left"
-                    //monsterY = canvaHeight /(2*monsterFallNumber) ;
                     for(let i = 0 ; i < monsterFallNumber ; i++) {
                         monstersFall.push(new MonsterFall(20,monsterY,sens));
                         monsterY += canvaHeight/monsterFallNumber;
                     }
             }
-    }
-    });
-    // let monsterFallNumber = data[level-1].monsters[0][0];
-    // let sens=data[level-1].monsters[0][1];
+    }});
     
-
     let monsterTrackNumber = data[level-1].monsters[1];
     let monsterY = canvaWidth /(2*monsterTrackNumber);
     for(let i = 0 ; i < monsterTrackNumber ; i++) {
@@ -243,7 +246,6 @@ function createObstacle(currentLvl){
 }
 
 function startMusic() {
-    //backgroundMusic.autoplay(true);
     backgroundMusic.play();
 }
 
@@ -253,9 +255,4 @@ function stopMusic(){
 
 function playMusic(){
     backgroundMusic.loop();
-}
-
-function deletMonster(){
-    monstersFall = monstersFall.filter(monster => monster.collided === false);
-    monstersTrack = monstersTrack.filter(monster => monster.collided === false);
 }

@@ -17,15 +17,10 @@ class Player {
     }
 
     update() {
-        // if (!this.grounded) {
-        //     this.applyForce(this.gravity); // Apply gravity
-        // }
-            this.applyForce(this.gravity);
-            this.vel.add(this.acc);
-            this.pos.add(this.vel);
-            this.acc.set(0, 0);
-        
-        // Keep the player within the canva bounds
+        this.applyForce(this.gravity);
+        this.vel.add(this.acc);
+        this.pos.add(this.vel);
+        this.acc.set(0, 0);
         this.pos.x = constrain(this.pos.x, 0, canvaWidth - this.size);
         this.pos.y = constrain(this.pos.y, 0, canvaHeight - this.size);
     }
@@ -42,7 +37,7 @@ class Player {
     }
 
     move(direction) {
-        const speed = 3; // Adjust the movement speed as needed
+        const speed = 3;
         if (direction === 'right') {
             this.applyForce(createVector(speed, 0));
         } else if (direction === 'left') {

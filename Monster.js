@@ -55,12 +55,10 @@ class MonsterFall extends Monster{
 
   checkCanvasCollision() {
     if (this.pos.x - this.r < 0 || this.pos.x + this.r > canvaWidth) {
-        //this.vel.x *= -1;
         this.collided = true;
     }
 
     if (this.pos.y - this.r < 0 || this.pos.y + this.r > canvaHeight) {
-        //this.vel.y *= -1;
         this.collided = true;
     }
   }
