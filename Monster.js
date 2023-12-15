@@ -13,6 +13,7 @@ class Monster {
     this.color = "black";
   }
 
+
   checkObstacleCollision(targetGroup) {
     // target is an array of obstacles
     targetGroup.forEach((target) => {
@@ -35,11 +36,36 @@ class Monster {
 }
 
 class MonsterFall extends Monster{
-  constructor(x,y){
+  constructor(x,y,sens){
     super(x,y);
-    this.color = '#A251FA'; // purple color
+    switch(sens){
+      case "left":
+          this.vel = createVector(2,0);
+          break;
+      case "bottom":
+          this.vel = createVector(0,-2);
+          break; 
+      case "right":
+          this.vel = createVector(-2,0);
+          break; 
+      default://"top"
+  }
+    this.color = '#A251FA';
+  }
+
+  checkCanvasCollision() {
+    if (this.pos.x - this.r < 0 || this.pos.x + this.r > canvaWidth) {
+        //this.vel.x *= -1;
+        this.collided = true;
+    }
+
+    if (this.pos.y - this.r < 0 || this.pos.y + this.r > canvaHeight) {
+        //this.vel.y *= -1;
+        this.collided = true;
+    }
   }
   update() {
+    this.checkCanvasCollision();
     this.pos.add(this.vel);
   }
 

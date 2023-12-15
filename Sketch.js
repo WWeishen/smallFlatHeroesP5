@@ -7,15 +7,17 @@ let playerList = [];
 let nbPlayer;
 let invincibleDuration = 2000;  //2 sec invincible when collision Pl & Em
 const data=[
-    {monsters: [25,0],//#monstersFall,#monstersTrack
-    obstacles:[[0,canvaHeight-5,canvaWidth,20],[0,300,canvaWidth/2-150 , 20]]
+    {monsters: [[25,"top"],2],//[#monstersFall,"top"|"bottom"|"left"|"right"],#monstersTrack
+    obstacles:[[0,canvaHeight-5,canvaWidth,20],[0,300,canvaWidth/2-150 ,20],[0, 500, 400, 20]]
     },
-    {monsters: [0,25],
+    {monsters: [[25,"bottom"],0],
+    obstacles:[[0,250,100,20],[canvaWidth-300,250,20,150],[100,550,100,20]]
+    },
+    {monsters: [[5,"left"],25],
     obstacles:[[canvaWidth - 400, 300, 400, 20],[0, 500, 400, 20]]
-    }
-    ,
-    {monsters: [25,0],
-    obstacles:[[0,250,100,20],[canvaWidth-150,250,150,20]]
+    },
+    {monsters: [[25,"right"],1],
+    obstacles:[[0,250,100,20],[canvaWidth-150,250,150,20],[canvaWidth-300,250,20,150]]
     }
 ]
 
@@ -183,12 +185,40 @@ function monsterDraw(monster){
 function createMonster(level){
     console.log(data);
     console.log(data[currentLvl-1]);
-    let monsterFallNumber = data[level-1].monsters[0];
-    let monsterX = canvaWidth /(2*monsterFallNumber);
-    for(let i = 0 ; i < monsterFallNumber ; i++) {
-        monstersFall.push(new MonsterFall(monsterX,0));
-        monsterX += canvaWidth/monsterFallNumber;
+    let monsterFallNumber = data[level-1].monsters[0][0];
+    let sens=data[level-1].monsters[0][1];
+    if(sens){//this.width = 20;this.height = 8;
+            let monsterX= canvaWidth /(2*monsterFallNumber);;
+            let monsterY = canvaHeight /(2*monsterFallNumber) ;
+        switch(sens){
+            case "top":
+                for(let i = 0 ; i < monsterFallNumber ; i++) {
+                    monstersFall.push(new MonsterFall(monsterX,20,sens));
+                    monsterX += canvaWidth/monsterFallNumber;
+                }
+                break;
+            case "bottom":
+                for(let i = 0 ; i < monsterFallNumber ; i++) {
+                    monstersFall.push(new MonsterFall(monsterX,canvaHeight-40,sens));
+                    monsterX += canvaWidth/monsterFallNumber;
+                }
+                break; 
+            case "right":
+                
+                for(let i = 0 ; i < monsterFallNumber ; i++) {
+                    monstersFall.push(new MonsterFall(canvaWidth-20,monsterY,sens));
+                    monsterY += canvaHeight/monsterFallNumber;
+                }
+                break; 
+            default://"left"
+                //monsterY = canvaHeight /(2*monsterFallNumber) ;
+                for(let i = 0 ; i < monsterFallNumber ; i++) {
+                    monstersFall.push(new MonsterFall(20,monsterY,sens));
+                    monsterY += canvaHeight/monsterFallNumber;
+                }
+        }
     }
+
     let monsterTrackNumber = data[level-1].monsters[1];
     let monsterY = canvaWidth /(2*monsterTrackNumber);
     for(let i = 0 ; i < monsterTrackNumber ; i++) {
