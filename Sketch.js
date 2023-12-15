@@ -47,58 +47,49 @@ function setup(){
         player2 = new Player(100,100,'pink');
         playerList.push(player2);
     }
-
     createMonster(1);
     createObstacle(1);
-    
 }
 
 
 function draw() {
     background(100,100,100);
-    if(data[currentLvl-1]){
-        //loop
-        if (data[currentLvl - 1].monsters && data[currentLvl - 1].obstacles) {
-        //player instructions 
+    //player instructions 
+    playerList.forEach(player => {
+        player.update();
+        player.draw();
+        player.grounded = false;
+    });
+    //obstacle intructions 
+    obstacles.forEach(obstacle => {
+        obstacle.draw();
         playerList.forEach(player => {
-            player.update();
-            player.draw();
-            player.grounded = false;
+            player.checkObstacleCollision(obstacle);
         });
-        //obstacle intructions 
-        obstacles.forEach(obstacle => {
-            obstacle.draw();
-            playerList.forEach(player => {
-                player.checkObstacleCollision(obstacle);
-            });
-        })
-        //monsters instructions
-        monstersFall.forEach(monster => {
-            monsterDraw(monster);
-            monster.update();
-        });
+    })
+    //monsters instructions
+    monstersFall.forEach(monster => {
+        monsterDraw(monster);
+        monster.update();
+    });
 
-        monstersTrack.forEach(monster => {
-            let target = playernearest(monster).pos;
-            monster.applyBehaviors(target); 
-            monsterDraw(monster);
-            monster.update(target);
-        });
-        deletMonster();
-
-
-
-        if(monstersTrack.length === 0 && monstersFall.length ===0){
-            currentLvl += 1;
+    monstersTrack.forEach(monster => {
+        let target = playernearest(monster).pos;
+        monster.applyBehaviors(target); 
+        monsterDraw(monster);
+        monster.update(target);
+    });
+    deletMonster();
+    
+    if(monstersTrack.length === 0 && monstersFall.length ===0){
+        currentLvl += 1;
+        if(data[currentLvl-1]){
             createMonster(currentLvl);
             createObstacle(currentLvl);
-            
+        }else{
+            displayPlayerWinWindow();
         }
-        }
-    }else{
-        displayPlayerWinWindow();
     }
-    
 }
 
 function keyPressed() {
@@ -143,15 +134,7 @@ function displayPlayerWinWindow(){
     fill(255);
     textSize(50);
     textAlign(CENTER, CENTER);
-    let str="";
-    playerList.forEach(element => {
-        if(indexOf(element) == 0){
-            str += "player1, "
-        }
-        else{str += "player2, "}
-    });
-    str +="you win";
-    text(str, width / 2, height / 2);
+    text("You win", width / 2, height / 2);
 }
 
 function checkPlayerList(){
@@ -198,7 +181,7 @@ function monsterDraw(monster){
 }
 
 function createMonster(level){
-    console.log(data); // Vérifiez la valeur de 'data'
+    console.log(data);
     console.log(data[currentLvl-1]);
     let monsterFallNumber = data[level-1].monsters[0];
     let monsterX = canvaWidth /(2*monsterFallNumber);

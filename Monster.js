@@ -24,7 +24,6 @@ class Monster {
   }
 
   checkPlayerCollision(player){
-    // Collision detection between player and monster
     if (player.pos.x + player.size >= this.pos.x && player.pos.x <= this.pos.x + this.r) {
       if (player.pos.y + player.size >= this.pos.y && player.pos.y <= this.pos.y + this.r) {
        return true;
@@ -44,20 +43,12 @@ class MonsterFall extends Monster{
     this.pos.add(this.vel);
   }
 
-  // On dessine le monstre
   draw() {
-    // formes fil de fer en blanc
     noStroke();
-    // épaisseur du trait = 2
     strokeWeight(2);
-    // formes pleines
     fill(this.color); 
-    // sauvegarde du contexte graphique (couleur pleine, fil de fer, épaisseur du trait, 
-    // position et rotation du repère de référence)
     push();
-    // on déplace le repère de référence.
     translate(this.pos.x, this.pos.y);
-    // et on le tourne. heading() renvoie l'angle du vecteur vitesse (c'est l'angle du véhicule)
     rotate(this.vel.heading());
 
     rect(0, 0, this.width, this.height);
@@ -92,41 +83,21 @@ class MonsterTrack extends Monster{
     return force;
   }
 
-
-  // On dessine le véhicule
   draw() {
-    // formes fil de fer en blanc
     noStroke();
-    // épaisseur du trait = 2
     strokeWeight(2);
-
-    // formes pleines
-    fill(this.color); // Red color
-
-    // sauvegarde du contexte graphique (couleur pleine, fil de fer, épaisseur du trait, 
-    // position et rotation du repère de référence)
+    fill(this.color);
     push();
-    // on déplace le repère de référence.
     translate(this.pos.x, this.pos.y);
-    // et on le tourne. heading() renvoie l'angle du vecteur vitesse (c'est l'angle du véhicule)
     rotate(this.vel.heading());
-
-    // Dessin d'un véhicule sous la forme d'un triangle. Comme s'il était droit, avec le 0, 0 en haut à gauche
     triangle(-this.r, -this.r / 2, -this.r, this.r / 2, this.r, 0);
-
     pop();
   }
 
   update() {
-    // on ajoute l'accélération à la vitesse. L'accélération est un incrément de vitesse
-    // (accélératiion = dérivée de la vitesse)
     this.vel.add(this.acc);
-    // on contraint la vitesse à la valeur maxSpeed
     this.vel.limit(this.maxSpeed);
-    // on ajoute la vitesse à la position. La vitesse est un incrément de position, 
-    // (la vitesse est la dérivée de la position)
     this.pos.add(this.vel);
-    // on remet l'accélération à zéro
     this.acc.set(0, 0);
   }
 }
