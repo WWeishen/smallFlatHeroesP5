@@ -84,6 +84,8 @@ function draw() {
             monsterDraw(monster);
             monster.update(target);
         });
+        deletMonster();
+
 
 
         if(monstersTrack.length === 0 && monstersFall.length ===0){
@@ -232,4 +234,9 @@ function stopMusic(){
 
 function playMusic(){
     backgroundMusic.loop();
+}
+
+function deletMonster(){
+    monstersFall = monstersFall.filter(monster => monster.collided === false);
+    monstersTrack = monstersTrack.filter(monster => monster.collided === false);
 }

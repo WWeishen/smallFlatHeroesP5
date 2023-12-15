@@ -15,17 +15,10 @@ class Monster {
 
   checkObstacleCollision(targetGroup) {
     // target is an array of obstacles
-    targetGroup.forEach((target,index) => {
+    targetGroup.forEach((target) => {
       if(rectsOverlap(this.pos.x, this.pos.y, this.r, this.r, 
         target.x, target.y, target.width, target.height)) {
         this.collided = true;
-      }
-      if (this.collided) {
-        if(this.constructor.name == "MonsterFall"){
-          monstersFall.splice(index, 1);
-        }else{
-          monstersTrack.splice(index, 1);
-        } 
       }
     });
   }
