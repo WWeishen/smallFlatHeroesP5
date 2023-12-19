@@ -55,7 +55,8 @@ function setup(){
 
 
 function draw() {
-    background(100,100,100);
+    if(data[currentLvl-1]){
+        background(100,100,100);
     displayLevelWindow();
     playerList.forEach(player => {
         player.update();
@@ -91,6 +92,8 @@ function draw() {
             displayPlayerWinWindow();
         }
     }
+    }
+    
 }
 
 function keyPressed() {
